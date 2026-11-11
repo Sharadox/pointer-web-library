@@ -1,0 +1,47 @@
+/* The system cursor hides only while the custom one is running (fine pointers). */
+:global(html).active,
+:global(html).active * {
+  cursor: none !important;
+}
+.dot,
+.ring {
+  --cursor-color: #fff;
+  --cursor-size: 34px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  pointer-events: none;
+  border-radius: 50%;
+  mix-blend-mode: difference;
+  display: none;
+}
+:global(html).active .dot,
+:global(html).active .ring {
+  display: block;
+}
+.dot {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  background: var(--cursor-color);
+}
+.ring {
+  width: var(--cursor-size);
+  height: var(--cursor-size);
+  margin: calc(var(--cursor-size) / -2) 0 0 calc(var(--cursor-size) / -2);
+  border: 1px solid color-mix(in srgb, var(--cursor-color) 60%, transparent);
+  transition:
+    width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    margin 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.35s;
+}
+.hot {
+  --cursor-size: 60px;
+  background: color-mix(in srgb, var(--cursor-color) 12%, transparent);
+}
+.grab {
+  --cursor-size: 76px;
+  border-style: dashed;
+}
