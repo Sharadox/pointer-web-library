@@ -4,6 +4,7 @@ Pointer effects for React websites:
 
 - **`useSpotlight`:** the pointer's position inside an element as `--pointer-x` and `--pointer-y`, for lights that follow it.
 - **`useTilt(maximum)`:** `--tilt-x` and `--tilt-y` in degrees, for a 3D tilt towards the pointer. It eases back when the pointer leaves, and is off on touch screens.
+- **`useParallax(ease)`:** where the pointer is over an element as `--parallax-x` and `--parallax-y` (-1 to 1) and `--parallax-hover` (0 to 1), eased every frame and back to 0 when it leaves, for scenes with depth. It is off on touch screens and with reduced motion.
 - **`<Cursor>`:** a dot and a lagging ring. The ring grows over clickable elements and turns dashed over draggable ones. It uses blend mode `difference`, so it shows on any background, and only runs on fine pointers.
 
 ## Install
@@ -26,6 +27,11 @@ const stage = useTilt<HTMLDivElement>(6);
 ```
 
 ```tsx
+const scene = useParallax<HTMLDivElement>(0.08);
+// .phone { transform: translate3d(calc(var(--parallax-x, 0) * 14px), calc(var(--parallax-y, 0) * 10px), 60px) }
+```
+
+```tsx
 <Cursor grabSelector="canvas, [data-grab]" />
 ```
 
@@ -35,6 +41,7 @@ const stage = useTilt<HTMLDivElement>(6);
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | `…/spotlight` | `useSpotlight<T>()` → reference                                                                                                       |
 | `…/tilt`      | `useTilt<T>(maximum = 8)` → reference                                                                                                 |
+| `…/parallax`  | `useParallax<T>(ease = 0.1)` → reference; CSS variables `--parallax-x`, `--parallax-y`, `--parallax-hover`                            |
 | `…/cursor`    | `<Cursor hotSelector? grabSelector? className?>`, `HOT_ELEMENTS`, `GRAB_ELEMENTS`; CSS variables `--cursor-color` and `--cursor-size` |
 
 ## Develop

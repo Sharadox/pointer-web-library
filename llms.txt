@@ -4,5 +4,6 @@
 
 - /spotlight: useSpotlight<T>() → ref; sets --pointer-x/--pointer-y (px) on pointermove
 - /tilt: useTilt<T>(maximum=8) → ref; sets --tilt-x/--tilt-y (deg); resets on leave; fine pointers only
+- /parallax: useParallax<T>(ease=0.1) → ref; sets unitless --parallax-x/--parallax-y (-1..1) and --parallax-hover (0..1), eased per animation frame, back to 0 on leave; fine pointers without reduced motion only
 - /cursor: <Cursor hotSelector grabSelector className /> dot + lagging ring, mix-blend difference; --cursor-color, --cursor-size; html gets class while active (hides system cursor)
 - Peer: react. License: Sharadox Open Source License 0.1.0
