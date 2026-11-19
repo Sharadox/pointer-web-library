@@ -1,6 +1,6 @@
-/* The system cursor hides only while the custom one is running (fine pointers). */
-:global(html).active,
-:global(html).active * {
+/* The system cursor hides only while the custom one is running (fine pointers), and comes back over native zones. */
+:global(html).active:not(.native),
+:global(html).active:not(.native) * {
   cursor: none !important;
 }
 .dot,
@@ -16,8 +16,8 @@
   mix-blend-mode: difference;
   display: none;
 }
-:global(html).active .dot,
-:global(html).active .ring {
+:global(html).active:not(.native) .dot,
+:global(html).active:not(.native) .ring {
   display: block;
 }
 .dot {

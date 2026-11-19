@@ -34,6 +34,19 @@ describe("Cursor", () => {
     expect(document.documentElement.className).toBe("");
   });
 
+  test("steps aside over native zones, where the system cursor shows", () => {
+    finePointer(true);
+    document.body.innerHTML = "<div data-guest><button>guest</button></div><p>host</p>";
+    const { unmount } = render(<Cursor />);
+    move(document.querySelector("button")!, 5, 5);
+    expect(document.documentElement.classList.contains("native")).toBe(true);
+    move(document.querySelector("p")!, 5, 5);
+    expect(document.documentElement.classList.contains("native")).toBe(false);
+    move(document.querySelector("button")!, 5, 5);
+    unmount();
+    expect(document.documentElement.className).toBe("");
+  });
+
   test("leaves touch screens alone", () => {
     finePointer(false);
     render(<Cursor />);

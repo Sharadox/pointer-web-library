@@ -1,6 +1,6 @@
 {
   "name": "@sharadox/pointer-web-library",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Pointer effects for React: a spotlight that follows the pointer, 3D tilt towards it, eased parallax and a custom cursor.",
   "private": false,
   "license": "SEE LICENSE IN LICENCA.md",
