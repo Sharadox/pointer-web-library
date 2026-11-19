@@ -8,16 +8,24 @@ import type { CursorProperties } from "@sharadox/pointer-web-library/cursor/type
 export const HOT_ELEMENTS = "a, button, input, textarea, select, label, [data-hot]";
 /** Where the ring shows "drag" by default. */
 export const GRAB_ELEMENTS = "canvas, [data-grab]";
+/** Where the system cursor comes back by default: another site's components shown here, with their own cursors. */
+export const NATIVE_ELEMENTS = "[data-guest], [data-native-cursor]";
 
 /**
  * A custom cursor on fine pointers (mice, trackpads): a dot and a ring that follows with a slight lag, grows over
  * clickable elements and turns dashed over draggable ones. White with `mix-blend-mode: difference`, so it shows on
- * any background; restyle it with `--cursor-color`, `--cursor-size` and `className`. Touch screens keep their own.
+ * any background; restyle it with `--cursor-color`, `--cursor-size` and `className`. Over `nativeSelector` it steps
+ * aside and the system cursor shows, with whatever those elements ask for (zoom-in, grab). Touch screens keep their own.
  *
  * @example
  * <Cursor grabSelector="canvas, [data-grab], .gallery" />
  */
-export function Cursor({ hotSelector = HOT_ELEMENTS, grabSelector = GRAB_ELEMENTS, className }: CursorProperties) {
+export function Cursor({
+  hotSelector = HOT_ELEMENTS,
+  grabSelector = GRAB_ELEMENTS,
+  nativeSelector = NATIVE_ELEMENTS,
+  className,
+}: CursorProperties) {
   const dot = useRef<HTMLDivElement>(null);
   const ring = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -33,6 +41,7 @@ export function Cursor({ hotSelector = HOT_ELEMENTS, grabSelector = GRAB_ELEMENT
       x = event.clientX;
       y = event.clientY;
       const target = event.target as Element;
+      root.classList.toggle(styles.native!, !!target.closest?.(nativeSelector));
       ring.current?.classList.toggle(styles.hot!, !!target.closest?.(hotSelector));
       ring.current?.classList.toggle(styles.grab!, !!target.closest?.(grabSelector));
     };
@@ -48,9 +57,9 @@ export function Cursor({ hotSelector = HOT_ELEMENTS, grabSelector = GRAB_ELEMENT
     return () => {
       removeEventListener("pointermove", move);
       cancelAnimationFrame(frame);
-      root.classList.remove(styles.active!);
+      root.classList.remove(styles.active!, styles.native!);
     };
-  }, [hotSelector, grabSelector]);
+  }, [hotSelector, grabSelector, nativeSelector]);
   return (
     <>
       <div ref={ring} className={classNames(styles.ring, className)} aria-hidden />
