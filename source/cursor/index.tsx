@@ -16,6 +16,7 @@ export const NATIVE_ELEMENTS = "[data-guest], [data-native-cursor]";
  * clickable elements and turns dashed over draggable ones. White with `mix-blend-mode: difference`, so it shows on
  * any background; restyle it with `--cursor-color`, `--cursor-size` and `className`. Over `nativeSelector` it steps
  * aside and the system cursor shows, with whatever those elements ask for (zoom-in, grab). Touch screens keep their own.
+ * It only works while it moves: once the ring has caught up with the pointer it rests until the pointer moves again.
  *
  * @example
  * <Cursor grabSelector="canvas, [data-grab], .gallery" />
@@ -40,6 +41,7 @@ export function Cursor({
     const move = (event: PointerEvent) => {
       x = event.clientX;
       y = event.clientY;
+      if (!frame) frame = requestAnimationFrame(loop);
       const target = event.target as Element;
       root.classList.toggle(styles.native!, !!target.closest?.(nativeSelector));
       ring.current?.classList.toggle(styles.hot!, !!target.closest?.(hotSelector));
@@ -48,9 +50,15 @@ export function Cursor({
     const loop = () => {
       ringX += (x - ringX) * 0.18;
       ringY += (y - ringY) * 0.18;
+      // Within a tenth of a pixel the ring has arrived: it settles exactly there and rests.
+      const settled = Math.abs(x - ringX) < 0.1 && Math.abs(y - ringY) < 0.1;
+      if (settled) {
+        ringX = x;
+        ringY = y;
+      }
       dot.current!.style.transform = `translate3d(${x}px, ${y}px, 0)`;
       ring.current!.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
-      frame = requestAnimationFrame(loop);
+      frame = settled ? 0 : requestAnimationFrame(loop);
     };
     addEventListener("pointermove", move);
     frame = requestAnimationFrame(loop);
