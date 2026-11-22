@@ -34,6 +34,24 @@ describe("Cursor", () => {
     expect(document.documentElement.className).toBe("");
   });
 
+  test("rests once the ring has caught up with the pointer, and moves again when the pointer does", () => {
+    finePointer(true);
+    document.body.innerHTML = "<p>text</p>";
+    const { container, unmount } = render(<Cursor />);
+    const [ring] = container.children as unknown as HTMLElement[];
+    move(document.querySelector("p")!, 300, 200);
+    vi.advanceTimersByTime(2000);
+    // Arrived exactly, and no frame waits any more.
+    expect(ring!.style.transform).toBe("translate3d(300px, 200px, 0)");
+    expect(vi.getTimerCount()).toBe(0);
+    move(document.querySelector("p")!, 320, 200);
+    move(document.querySelector("p")!, 340, 200);
+    expect(vi.getTimerCount()).toBe(1);
+    vi.advanceTimersByTime(20);
+    expect(ring!.style.transform).not.toBe("translate3d(300px, 200px, 0)");
+    unmount();
+  });
+
   test("steps aside over native zones, where the system cursor shows", () => {
     finePointer(true);
     document.body.innerHTML = "<div data-guest><button>guest</button></div><p>host</p>";
