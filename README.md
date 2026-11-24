@@ -2,7 +2,7 @@
 
 Pointer effects for React websites:
 
-- **`useSpotlight`:** the pointer's position inside an element as `--pointer-x` and `--pointer-y`, for lights that follow it.
+- **`useSpotlight`:** the pointer's position relative to an element as `--pointer-x` and `--pointer-y`, for lights that follow it: anywhere on the page, so the light moves before the pointer reaches the element, and while the page scrolls.
 - **`useTilt(maximum)`:** `--tilt-x` and `--tilt-y` in degrees, for a 3D tilt towards the pointer. It eases back when the pointer leaves, and is off on touch screens.
 - **`useParallax(ease)`:** where the pointer is over an element as `--parallax-x` and `--parallax-y` (-1 to 1) and `--parallax-hover` (0 to 1), eased every frame and back to 0 when it leaves, for scenes with depth. It is off on touch screens and with reduced motion.
 - **`<Cursor>`:** a dot and a lagging ring. The ring grows over clickable elements and turns dashed over draggable ones. Over native zones (`[data-guest]`: another site's components shown on yours) it steps aside and the system cursor shows. It uses blend mode `difference`, so it shows on any background, and only runs on fine pointers.
