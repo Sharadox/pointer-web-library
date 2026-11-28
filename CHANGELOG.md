@@ -2,6 +2,10 @@
 
 What changed in each version of `@sharadox/pointer-web-library`, newest first.
 
+## 0.5.0
+
+followPointerAngle: an element's angle toward the pointer while it is near, for glows that turn around it.
+
 ## 0.4.0
 
 The spotlight follows the pointer anywhere on the page (and while it scrolls), not only over the element.

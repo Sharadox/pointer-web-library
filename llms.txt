@@ -5,5 +5,6 @@
 - /spotlight: useSpotlight<T>() → ref; sets --pointer-x/--pointer-y (px, relative to the element) on every pointermove anywhere on the page and on scroll
 - /tilt: useTilt<T>(maximum=8) → ref; sets --tilt-x/--tilt-y (deg); resets on leave; fine pointers only
 - /parallax: useParallax<T>(ease=0.1) → ref; sets unitless --parallax-x/--parallax-y (-1..1) and --parallax-hover (0..1), eased per animation frame, back to 0 on leave; fine pointers without reduced motion only
+- /pointer-angle: followPointerAngle(element, { range, rest, onAngle }) → stop(); onAngle(degrees, 0 = right, 90 = below) while the pointer is within range px of the element's edges, then once back to rest; unwrapped (shortest way, no 360° jumps); shared listeners, one getBoundingClientRect per frame, off-screen elements skipped (IntersectionObserver); page leave and lifted fingers count as leaving
 - /cursor: <Cursor hotSelector grabSelector nativeSelector className /> dot + lagging ring, mix-blend difference; --cursor-color, --cursor-size; html gets class while active (hides system cursor); over nativeSelector (NATIVE_ELEMENTS: [data-guest], [data-native-cursor]) html gets a second class, the ring and dot hide and the system cursor shows
 - Peer: react. License: Sharadox Open Source License 0.1.0
