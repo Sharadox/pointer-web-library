@@ -5,6 +5,7 @@ Pointer effects for React websites:
 - **`useSpotlight`:** the pointer's position relative to an element as `--pointer-x` and `--pointer-y`, for lights that follow it: anywhere on the page, so the light moves before the pointer reaches the element, and while the page scrolls.
 - **`useTilt(maximum)`:** `--tilt-x` and `--tilt-y` in degrees, for a 3D tilt towards the pointer. It eases back when the pointer leaves, and is off on touch screens.
 - **`useParallax(ease)`:** where the pointer is over an element as `--parallax-x` and `--parallax-y` (-1 to 1) and `--parallax-hover` (0 to 1), eased every frame and back to 0 when it leaves, for scenes with depth. It is off on touch screens and with reduced motion.
+- **`followPointerAngle(element, { range, rest, onAngle })`:** the pointer's direction from an element's center, in degrees, while the pointer is within `range` pixels of it, and back to `rest` when it leaves, for glows and lights that turn toward the pointer around an element. The angle takes the shortest way and never jumps a whole turn, so a CSS transition on it stays smooth. All followed elements share one set of listeners and one measure per frame, and elements off screen cost nothing.
 - **`<Cursor>`:** a dot and a lagging ring. The ring grows over clickable elements and turns dashed over draggable ones. Over native zones (`[data-guest]`: another site's components shown on yours) it steps aside and the system cursor shows. It uses blend mode `difference`, so it shows on any background, and only runs on fine pointers.
 
 ## Install
@@ -32,17 +33,28 @@ const scene = useParallax<HTMLDivElement>(0.08);
 ```
 
 ```tsx
+useEffect(() =>
+  followPointerAngle(card.current!, {
+    range: 128,
+    rest: 90,
+    onAngle: (angle) => glow.current!.style.setProperty("--glow-angle", `${angle}deg`),
+  }),
+);
+```
+
+```tsx
 <Cursor grabSelector="canvas, [data-grab]" />
 ```
 
 ## API
 
-| Import        | Export                                                                                                                                                                   |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `…/spotlight` | `useSpotlight<T>()` → reference                                                                                                                                          |
-| `…/tilt`      | `useTilt<T>(maximum = 8)` → reference                                                                                                                                    |
-| `…/parallax`  | `useParallax<T>(ease = 0.1)` → reference; CSS variables `--parallax-x`, `--parallax-y`, `--parallax-hover`                                                               |
-| `…/cursor`    | `<Cursor hotSelector? grabSelector? nativeSelector? className?>`, `HOT_ELEMENTS`, `GRAB_ELEMENTS`, `NATIVE_ELEMENTS`; CSS variables `--cursor-color` and `--cursor-size` |
+| Import            | Export                                                                                                                                                                   |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `…/spotlight`     | `useSpotlight<T>()` → reference                                                                                                                                          |
+| `…/tilt`          | `useTilt<T>(maximum = 8)` → reference                                                                                                                                    |
+| `…/parallax`      | `useParallax<T>(ease = 0.1)` → reference; CSS variables `--parallax-x`, `--parallax-y`, `--parallax-hover`                                                               |
+| `…/pointer-angle` | `followPointerAngle(element, { range, rest, onAngle })` → stop function                                                                                                  |
+| `…/cursor`        | `<Cursor hotSelector? grabSelector? nativeSelector? className?>`, `HOT_ELEMENTS`, `GRAB_ELEMENTS`, `NATIVE_ELEMENTS`; CSS variables `--cursor-color` and `--cursor-size` |
 
 ## Develop
 
